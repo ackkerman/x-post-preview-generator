@@ -70,6 +70,7 @@ CTA非表示:
 - `make lint`: lint (go vet)
 - `make tidy`: go mod tidy
 - `make sample`: サンプル生成 (jack / just setting up my twttr)
+- `make ui-wasm`: Web UI向けWasmビルドを生成
 - `make`: fmt/lint/test/build
 
 ## Web UI
@@ -77,10 +78,14 @@ CTA非表示:
 `ui` 配下にNext.jsベースの操作UIを用意しています。
 
 ```bash
+make ui-wasm
 cd ui
 npm install
 npm run dev
 ```
+
+`make ui-wasm` はGoのWasmビルドと `wasm_exec.js` を `ui/public/wasm` に配置します。
+プレビューはブラウザ内でWasmがSVGを生成するため、アイコンURLにはCORS許可が必要です。
 
 ## オプション
 

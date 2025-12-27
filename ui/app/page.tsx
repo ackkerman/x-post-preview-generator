@@ -1,9 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Copy, Download, RefreshCcw, Sparkles } from "lucide-react";
 
-import { XPostPreview, type PostConfig } from "@/components/xpost-preview";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { type PostConfig } from "@/lib/post-config";
+import { renderSvg } from "@/lib/wasm";
 
 const defaultConfig: PostConfig = {
   text: "Just shipped a preview generator that turns raw text into a polished X post mock. What should we build next?",
@@ -51,8 +52,33 @@ const presets: Array<{ label: string; value: PostConfig }> = [
 export default function Home() {
   const [config, setConfig] = useState<PostConfig>(defaultConfig);
   const [copied, setCopied] = useState(false);
+  const [svgMarkup, setSvgMarkup] = useState<string>("");
+  const [previewStatus, setPreviewStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [previewError, setPreviewError] = useState<string>("");
 
   const payload = useMemo(() => JSON.stringify(config, null, 2), [config]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setPreviewStatus("loading");
+    setPreviewError("");
+
+    renderSvg(config)
+      .then((svg) => {
+        if (cancelled) return;
+        setSvgMarkup(svg);
+        setPreviewStatus("ready");
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setPreviewStatus("error");
+        setPreviewError(error instanceof Error ? error.message : "Failed to render preview");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [config]);
 
   const handleCopy = async () => {
     try {
@@ -92,6 +118,29 @@ export default function Home() {
         </header>
 
         <main className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+          <section className="space-y-4">
+            <div className="sticky top-6 space-y-4">
+              <div className="panel flex min-h-[280px] items-center justify-center p-4">
+                {previewStatus === "loading" ? (
+                  <div className="text-sm text-muted">Rendering preview...</div>
+                ) : null}
+                {previewStatus === "error" ? (
+                  <div className="space-y-2 text-center text-sm text-muted">
+                    <p>Preview failed.</p>
+                    <p className="text-xs">{previewError}</p>
+                    <p className="text-xs">Run `make ui-wasm` to rebuild the wasm bundle.</p>
+                  </div>
+                ) : null}
+                {previewStatus === "ready" ? (
+                  <div
+                    className="w-full [&>svg]:h-auto [&>svg]:w-full"
+                    dangerouslySetInnerHTML={{ __html: svgMarkup }}
+                  />
+                ) : null}
+              </div>
+            </div>
+          </section>
+        
           <Card className="animate-fade-up">
             <CardHeader>
               <CardTitle>Post controls</CardTitle>
@@ -255,18 +304,6 @@ export default function Home() {
               </div>
             </CardContent>
           </Card>
-
-          <section className="space-y-4">
-            <div className="panel-muted p-4 text-sm text-muted">
-              Preview renders the same content you will pass to the generator. Tight width is ideal for embeds, wide feels closer to the feed.
-            </div>
-            <div className="sticky top-6 space-y-4">
-              <XPostPreview data={config} />
-              <div className="rounded-2xl border border-border bg-white/70 px-4 py-3 text-xs text-muted">
-                Tip: Use the exported JSON as the source for your CLI or API layer.
-              </div>
-            </div>
-          </section>
         </main>
       </div>
     </div>

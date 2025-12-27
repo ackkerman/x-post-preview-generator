@@ -42,3 +42,4 @@ ui/.next/
 ui/out/
 ui/.turbo/
 ui/.env*
+ui/public/wasm/

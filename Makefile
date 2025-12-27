@@ -1,4 +1,7 @@
-.PHONY: all build test fmt vet lint tidy sample
+.PHONY: all build test fmt vet lint tidy sample ui-wasm
+
+WASM_EXEC := $(shell go env GOROOT)/lib/wasm/wasm_exec.js
+WASM_EXEC_FALLBACK := $(shell go env GOROOT)/misc/wasm/wasm_exec.js
 
 all: fmt lint test build
 
@@ -56,3 +59,21 @@ sample:
 		-date "5:50 AM - Mar 22, 2006" \
 		-cta "Read 16K replies" \
 		-output "samples/simple-jack.svg"
+
+ui-wasm:
+	mkdir -p ui/public/wasm
+	GOOS=js GOARCH=wasm go build -o ui/public/wasm/xpostgen.wasm ./cmd/xpostgen-wasm
+	if [ -f "$(WASM_EXEC)" ]; then \
+		cp "$(WASM_EXEC)" ui/public/wasm/wasm_exec.js; \
+	else \
+		cp "$(WASM_EXEC_FALLBACK)" ui/public/wasm/wasm_exec.js; \
+	fi
+
+ui-install:
+	pnpm --prefix ui install
+
+ui-dev: ui-install ui-wasm
+	pnpm --prefix ui dev --port 3001
+
+ui-build: ui-install ui-wasm
+	pnpm --prefix ui install
