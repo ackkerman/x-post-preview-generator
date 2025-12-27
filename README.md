@@ -77,6 +77,7 @@ CTA非表示:
 - `-cta`: CTAボタン文言 (空で非表示、既定は英語文言)
 - `-no-cta`: CTAを非表示
 - `-verified`: 認証バッジを表示
+- `-simple`: Simpleモード(フッター非表示)
 - `-output`: 出力ファイルパス (拡張子から形式を推定)
 - `-format`: 出力形式 `png|jpg|jpeg|gif|svg|html`
 - `-width`: 出力幅(px)

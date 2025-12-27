@@ -45,6 +45,7 @@ type Layout struct {
 	InfoSize       float64
 	DividerY       float64
 	Actions        []ActionLayout
+	ShowFooter     bool
 	CTA            string
 	CtaX           float64
 	CtaY           float64
@@ -88,12 +89,13 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 	gap := float64(opts.Gap)
 	width := float64(opts.Width)
 
-	twitterSize := 28.0
-	infoSize := 18.0
-	actionIconSize := 20.0
+	twitterSize := 30.0
+	infoSize := 20.0
+	actionIconSize := 22.0
 	ctaHeight := 44.0
-	verifiedSize := 18.0
+	verifiedSize := 20.0
 	verifiedGap := 6.0
+	showFooter := !data.Simple
 
 	textStartX := padding + avatarSize + gap
 	headerAvailableWidth := width - padding - textStartX - twitterSize - 8
@@ -143,6 +145,37 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 		textBlockHeight = float64(len(textLines)-1)*textLineHeight + textHeight
 	}
 
+	if !showFooter {
+		height := int(math.Ceil(padding + headerHeight + 16 + textBlockHeight + padding))
+		return Layout{
+			Width:          int(width),
+			Height:         height,
+			Padding:        padding,
+			AvatarSize:     avatarSize,
+			AvatarX:        padding,
+			AvatarY:        padding,
+			HeaderGap:      gap,
+			NameX:          textStartX,
+			NameY:          nameY,
+			Verified:       data.Verified,
+			VerifiedX:      verifiedX,
+			VerifiedY:      verifiedY,
+			VerifiedSize:   verifiedSize,
+			HandleX:        textStartX,
+			HandleY:        handleY,
+			TwitterX:       width - padding - twitterSize,
+			TwitterY:       padding,
+			TwitterSize:    twitterSize,
+			TextX:          textStartX,
+			TextY:          textY,
+			TextLines:      textLines,
+			TextLineHeight: textLineHeight,
+			ShowFooter:     false,
+			NameLine:       nameLine,
+			HandleLine:     handleLine,
+		}
+	}
+
 	dateAvailableWidth := textAvailableWidth - infoSize - 8
 	if dateAvailableWidth < 1 {
 		dateAvailableWidth = textAvailableWidth
@@ -155,7 +188,8 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 	cursorY := padding + headerHeight + 16 + textBlockHeight
 
 	if dateLine != "" {
-		dateY = cursorY + 16 + metaHeight
+		dateRowHeight := math.Max(metaHeight, infoSize)
+		dateY = cursorY + 16 + (dateRowHeight-metaHeight)/2 + metaHeight
 		infoX = width - padding - infoSize
 		infoY = dateY - metaHeight/2 - infoSize/2
 		dividerY = dateY + 12
@@ -166,8 +200,8 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 	}
 
 	actionsTop := cursorY + 16
-	actionsBaseline := actionsTop + actionHeight
 	actionRowHeight := math.Max(actionHeight, actionIconSize)
+	actionsBaseline := actionsTop + (actionRowHeight-actionHeight)/2 + actionHeight
 	cursorY = actionsTop + actionRowHeight
 
 	actions := defaultActions()
@@ -228,6 +262,7 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 		InfoSize:       infoSize,
 		DividerY:       dividerY,
 		Actions:        actions,
+		ShowFooter:     true,
 		CTA:            cta,
 		CtaX:           ctaX,
 		CtaY:           ctaY,

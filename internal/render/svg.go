@@ -52,6 +52,7 @@ type svgView struct {
 	DateY         float64
 	DateLine      string
 	DividerY      float64
+	ShowFooter    bool
 	TwitterIcon   string
 	InfoIcon      string
 	Actions       []svgAction
@@ -91,6 +92,7 @@ const svgTemplate = `<?xml version="1.0" encoding="UTF-8"?>
   <text x="{{.X}}" y="{{.Y}}" fill="{{$.TextColor}}" font-family="{{$.FontFamily}}" font-size="28">{{escape .Text}}</text>
   {{end}}
 
+  {{if .ShowFooter}}
   {{if .DateLine}}
   <text x="{{.DateX}}" y="{{.DateY}}" fill="{{.MutedColor}}" font-family="{{.FontFamily}}" font-size="22">{{escape .DateLine}}</text>
   {{.InfoIcon}}
@@ -106,6 +108,7 @@ const svgTemplate = `<?xml version="1.0" encoding="UTF-8"?>
   {{if .CTA}}
   <rect x="{{.CtaX}}" y="{{.CtaY}}" width="{{.CtaWidth}}" height="{{.CtaHeight}}" rx="{{div .CtaHeight 2}}" ry="{{div .CtaHeight 2}}" fill="{{.Background}}" stroke="{{.Divider}}" stroke-width="1" />
   <text x="{{.CtaTextX}}" y="{{.CtaTextY}}" fill="{{.AccentColor}}" font-family="{{.FontFamily}}" font-size="20" font-weight="600">{{escape .CTA}}</text>
+  {{end}}
   {{end}}
 </svg>
 `
@@ -200,6 +203,7 @@ func RenderSVG(data TweetData, opts RenderOptions) (string, error) {
 		DividerX1:     layout.Padding,
 		DividerX2:     float64(layout.Width) - layout.Padding,
 		DividerY:      layout.DividerY,
+		ShowFooter:    layout.ShowFooter,
 		TwitterIcon:   twitterIcon,
 		InfoIcon:      infoIcon,
 		Actions:       actions,

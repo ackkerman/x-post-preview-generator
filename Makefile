@@ -30,3 +30,24 @@ sample:
 		-date "5:50 AM - Mar 22, 2006" \
 		-cta "Read 16K replies" \
 		-output "samples/jack.png"
+
+	go run ./cmd/xpostgen \
+		-text "just setting up my twttr" \
+		-name "jack" \
+		-id "jack" \
+		-verified \
+		-icon "https://pbs.twimg.com/profile_images/1661201415899951105/azNjKOSH_400x400.jpg" \
+		-date "5:50 AM - Mar 22, 2006" \
+		-cta "Read 16K replies" \
+		-output "samples/jack.svg"
+
+	go run ./cmd/xpostgen \
+		-text "just setting up my twttr" \
+		-name "jack" \
+		-id "jack" \
+		-verified \
+		-simple \
+		-icon "https://pbs.twimg.com/profile_images/1661201415899951105/azNjKOSH_400x400.jpg" \
+		-date "5:50 AM - Mar 22, 2006" \
+		-cta "Read 16K replies" \
+		-output "samples/simple-jack.svg"

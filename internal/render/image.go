@@ -97,7 +97,7 @@ func RenderImage(data TweetData, opts RenderOptions) (*image.RGBA, error) {
 		y += layout.TextLineHeight
 	}
 
-	if layout.DateLine != "" {
+	if layout.ShowFooter && layout.DateLine != "" {
 		ctx.SetFontFace(fonts.Meta)
 		ctx.SetColor(muted)
 		ctx.DrawString(layout.DateLine, layout.DateX, layout.DateY)
@@ -108,22 +108,26 @@ func RenderImage(data TweetData, opts RenderOptions) (*image.RGBA, error) {
 		}
 	}
 
-	ctx.SetColor(divider)
-	ctx.SetLineWidth(1)
-	ctx.DrawLine(layout.Padding, layout.DividerY, float64(layout.Width)-layout.Padding, layout.DividerY)
-	ctx.Stroke()
-
-	for _, action := range layout.Actions {
-		icon, err := rasterizeIcon(action.IconName, opts.Theme.Muted, int(action.IconSize))
-		if err == nil {
-			ctx.DrawImage(icon, int(action.IconX), int(action.IconY))
-		}
-		ctx.SetFontFace(fonts.Action)
-		ctx.SetColor(muted)
-		ctx.DrawString(action.Label, action.LabelX, action.LabelY)
+	if layout.ShowFooter {
+		ctx.SetColor(divider)
+		ctx.SetLineWidth(1)
+		ctx.DrawLine(layout.Padding, layout.DividerY, float64(layout.Width)-layout.Padding, layout.DividerY)
+		ctx.Stroke()
 	}
 
-	if layout.CTA != "" {
+	if layout.ShowFooter {
+		for _, action := range layout.Actions {
+			icon, err := rasterizeIcon(action.IconName, opts.Theme.Muted, int(action.IconSize))
+			if err == nil {
+				ctx.DrawImage(icon, int(action.IconX), int(action.IconY))
+			}
+			ctx.SetFontFace(fonts.Action)
+			ctx.SetColor(muted)
+			ctx.DrawString(action.Label, action.LabelX, action.LabelY)
+		}
+	}
+
+	if layout.ShowFooter && layout.CTA != "" {
 		ctx.SetColor(bg)
 		ctx.DrawRoundedRectangle(layout.CtaX, layout.CtaY, layout.CtaWidth, layout.CtaHeight, layout.CtaHeight/2)
 		ctx.FillPreserve()

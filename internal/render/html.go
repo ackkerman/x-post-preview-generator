@@ -17,6 +17,7 @@ type htmlView struct {
 	Text          string
 	CTA           string
 	Verified      bool
+	ShowFooter    bool
 	AvatarDataURI string
 	Initials      string
 	FontFamily    string
@@ -111,11 +112,6 @@ const htmlTemplate = `<!doctype html>
     .verified {
       color: var(--accent);
     }
-    .verified svg {
-      width: 18px;
-      height: 18px;
-      display: block;
-    }
     .handle {
       font-size: 22px;
       color: var(--muted);
@@ -156,13 +152,23 @@ const htmlTemplate = `<!doctype html>
       gap: 8px;
     }
     .icon svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+    .twitter svg {
+      width: 30px;
+      height: 30px;
+      display: block;
+    }
+    .verified svg {
       width: 20px;
       height: 20px;
       display: block;
     }
     .info svg {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       display: block;
     }
     .cta {
@@ -201,23 +207,25 @@ const htmlTemplate = `<!doctype html>
       <div class="twitter icon">{{.TwitterIcon}}</div>
     </div>
     <div class="text">{{.Text}}</div>
-    {{if .DateLine}}
-    <div class="date-row">
-      <div>{{.DateLine}}</div>
-      <div class="info">{{.InfoIcon}}</div>
-    </div>
-    <div class="divider"></div>
-    {{else}}
-    <div class="divider" style="margin-top: 16px;"></div>
-    {{end}}
-    <div class="actions">
-      <div class="action icon">{{.ReplyIcon}}<span>Reply</span></div>
-      <div class="action icon">{{.RetweetIcon}}<span>Retweet</span></div>
-      <div class="action icon">{{.LikeIcon}}<span>Like</span></div>
-      <div class="action icon">{{.LinkIcon}}<span>Copy link</span></div>
-    </div>
-    {{if .CTA}}
-    <div class="cta">{{.CTA}}</div>
+    {{if .ShowFooter}}
+      {{if .DateLine}}
+      <div class="date-row">
+        <div>{{.DateLine}}</div>
+        <div class="info">{{.InfoIcon}}</div>
+      </div>
+      <div class="divider"></div>
+      {{else}}
+      <div class="divider" style="margin-top: 16px;"></div>
+      {{end}}
+      <div class="actions">
+        <div class="action icon">{{.ReplyIcon}}<span>Reply</span></div>
+        <div class="action icon">{{.RetweetIcon}}<span>Retweet</span></div>
+        <div class="action icon">{{.LikeIcon}}<span>Like</span></div>
+        <div class="action icon">{{.LinkIcon}}<span>Copy link</span></div>
+      </div>
+      {{if .CTA}}
+      <div class="cta">{{.CTA}}</div>
+      {{end}}
     {{end}}
   </div>
 </body>
@@ -247,6 +255,7 @@ func RenderHTML(data TweetData, opts RenderOptions) (string, error) {
 		Text:          data.Text,
 		CTA:           strings.TrimSpace(data.CTA),
 		Verified:      data.Verified,
+		ShowFooter:    !data.Simple,
 		AvatarDataURI: avatar,
 		Initials:      initials(data.Name),
 		FontFamily:    opts.FontFamily,

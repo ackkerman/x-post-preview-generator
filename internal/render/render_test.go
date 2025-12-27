@@ -101,3 +101,19 @@ func TestIconsLoad(t *testing.T) {
 		t.Fatalf("unexpected icon size")
 	}
 }
+
+func TestSimpleModeHTML(t *testing.T) {
+	data := TweetData{
+		Text:   "Simple preview",
+		Name:   "Example User",
+		Handle: "example",
+		Simple: true,
+	}
+	html, err := RenderHTML(data, DefaultOptions())
+	if err != nil {
+		t.Fatalf("RenderHTML: %v", err)
+	}
+	if strings.Contains(html, "Reply") || strings.Contains(html, "Copy link") {
+		t.Fatalf("simple mode should hide footer actions")
+	}
+}

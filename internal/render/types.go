@@ -12,6 +12,7 @@ type TweetData struct {
 	Location string
 	CTA      string
 	Verified bool
+	Simple   bool
 }
 
 // RenderOptions controls output sizes, fonts, and theme.
