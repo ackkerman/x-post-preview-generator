@@ -42,3 +42,4 @@ ui/out/
 ui/.turbo/
 ui/.env*
 ui/public/wasm/
+ui/build
