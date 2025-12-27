@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Copy, Download, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 
@@ -134,6 +134,9 @@ const presets = [
 export default function Home() {
   const [language, setLanguage] = useState<Language>("en");
   const [config, setConfig] = useState<PostConfig>(defaultConfig);
+  const [avatarUrlInput, setAvatarUrlInput] = useState(defaultConfig.avatarUrl);
+  const [avatarFileName, setAvatarFileName] = useState("");
+  const avatarFileInputRef = useRef<HTMLInputElement>(null);
   const [exportFormat, setExportFormat] = useState<ExportFormat>("svg");
   const [copyStatus, setCopyStatus] = useState<"idle" | "success">("idle");
   const [exportError, setExportError] = useState("");
@@ -163,6 +166,65 @@ export default function Home() {
       cancelled = true;
     };
   }, [config]);
+
+  useEffect(() => {
+    if (config.avatarUrl.startsWith("data:")) {
+      return;
+    }
+    setAvatarUrlInput(config.avatarUrl);
+    setAvatarFileName("");
+    if (avatarFileInputRef.current) {
+      avatarFileInputRef.current.value = "";
+    }
+  }, [config.avatarUrl]);
+
+  const handleAvatarUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    if (avatarFileInputRef.current) {
+      avatarFileInputRef.current.value = "";
+    }
+    setAvatarFileName("");
+    setAvatarUrlInput(value);
+    setConfig((prev) => ({ ...prev, avatarUrl: value }));
+  };
+
+  const handleAvatarFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result !== "string") {
+        if (avatarFileInputRef.current) {
+          avatarFileInputRef.current.value = "";
+        }
+        setAvatarFileName("");
+        toast.error(t.errors.avatarUploadFailed);
+        return;
+      }
+      setAvatarFileName(file.name);
+      setConfig((prev) => ({ ...prev, avatarUrl: result }));
+    };
+    reader.onerror = () => {
+      if (avatarFileInputRef.current) {
+        avatarFileInputRef.current.value = "";
+      }
+      setAvatarFileName("");
+      toast.error(t.errors.avatarUploadFailed);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleAvatarUploadClear = () => {
+    if (avatarFileInputRef.current) {
+      avatarFileInputRef.current.value = "";
+    }
+    setAvatarFileName("");
+    setConfig((prev) => ({ ...prev, avatarUrl: avatarUrlInput }));
+  };
 
   const handleCopy = async () => {
     setExportError("");
@@ -358,14 +420,37 @@ export default function Home() {
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="avatar">{t.labels.avatar}</Label>
-                  <Input
-                    id="avatar"
-                    placeholder="https://"
-                    value={config.avatarUrl}
-                    onChange={(event) => setConfig({ ...config, avatarUrl: event.target.value })}
-                  />
+                <div className="space-y-3 col-span-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="avatarUrl">{t.labels.avatar}</Label>
+                    <Input
+                      id="avatarUrl"
+                      placeholder="https://"
+                      value={avatarUrlInput}
+                      onChange={handleAvatarUrlChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="avatarUpload">{t.labels.avatarUpload}</Label>
+                    <Input
+                      id="avatarUpload"
+                      ref={avatarFileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarFileChange}
+                      className="border-none"
+                    />
+                    {avatarFileName ? (
+                      <div className="flex items-center justify-between gap-2 text-xs text-muted">
+                        <span>{t.labels.avatarUploadSelected.replace("{name}", avatarFileName)}</span>
+                        <Button type="button" variant="ghost" size="sm" onClick={handleAvatarUploadClear}>
+                          {t.buttons.removeUpload}
+                        </Button>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted">{t.labels.avatarUploadHint}</p>
+                    )}
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="date">{t.labels.date}</Label>

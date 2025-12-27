@@ -24,6 +24,9 @@ export const translations = {
       name: "Display name",
       handle: "Handle",
       avatar: "Avatar image URL",
+      avatarUpload: "Avatar image file",
+      avatarUploadHint: "Upload a PNG, JPEG, GIF, or SVG.",
+      avatarUploadSelected: "Selected file: {name}",
       date: "Date line",
       likes: "Like count",
       cta: "CTA text",
@@ -54,6 +57,7 @@ export const translations = {
     buttons: {
       reset: "Reset",
       clear: "Clear",
+      removeUpload: "Remove upload",
       copy: "Copy",
       copied: "Copied",
       download: "Download"
@@ -65,6 +69,7 @@ export const translations = {
       previewNotReady: "Preview is not ready",
       clipboardUnavailable: "Clipboard API is not available",
       pngExportFailed: "Failed to export PNG",
+      avatarUploadFailed: "Failed to load the avatar file",
       copyFailed: "Failed to copy preview",
       downloadFailed: "Failed to download preview"
     }
@@ -93,7 +98,10 @@ export const translations = {
       name: "表示名",
       handle: "ハンドル",
       avatar: "アバター画像URL",
-      date: "日時行",
+      avatarUpload: "アバター画像ファイル",
+      avatarUploadHint: "PNG / JPEG / GIF / SVG をアップロードできます。",
+      avatarUploadSelected: "選択中: {name}",
+      date: "投稿日時",
       likes: "いいね数",
       cta: "CTA文言",
       layout: "レイアウト",
@@ -123,6 +131,7 @@ export const translations = {
     buttons: {
       reset: "リセット",
       clear: "クリア",
+      removeUpload: "アップロード解除",
       copy: "コピー",
       copied: "コピー済み",
       download: "ダウンロード"
@@ -134,6 +143,7 @@ export const translations = {
       previewNotReady: "プレビューの準備ができていません。",
       clipboardUnavailable: "クリップボードAPIが利用できません。",
       pngExportFailed: "PNGの書き出しに失敗しました。",
+      avatarUploadFailed: "アバター画像の読み込みに失敗しました。",
       copyFailed: "プレビューのコピーに失敗しました。",
       downloadFailed: "プレビューのダウンロードに失敗しました。"
     }

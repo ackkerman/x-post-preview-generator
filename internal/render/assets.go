@@ -11,8 +11,12 @@ import (
 )
 
 func avatarDataURI(pathOrURL string) (string, error) {
+	pathOrURL = strings.TrimSpace(pathOrURL)
 	if pathOrURL == "" {
 		return "", nil
+	}
+	if strings.HasPrefix(pathOrURL, "data:") {
+		return pathOrURL, nil
 	}
 	var reader io.ReadCloser
 	var contentType string
