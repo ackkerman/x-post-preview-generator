@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Copy, Download, RefreshCcw, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -178,6 +179,7 @@ export default function Home() {
         try {
           await navigator.clipboard.writeText(svgMarkup);
           setCopyStatus("success");
+          toast.success(t.toast.copySuccess.replace("{format}", t.options.svg));
           setTimeout(() => setCopyStatus("idle"), 1600);
         } catch {
           setCopyStatus("idle");
@@ -192,8 +194,22 @@ export default function Home() {
     try {
       await navigator.clipboard.write([new ClipboardItem({ [mimeType]: blob })]);
       setCopyStatus("success");
+      const formatLabel = exportFormat === "svg" ? t.options.svg : t.options.png;
+      toast.success(t.toast.copySuccess.replace("{format}", formatLabel));
       setTimeout(() => setCopyStatus("idle"), 1600);
     } catch {
+      if (exportFormat === "svg" && navigator.clipboard?.writeText) {
+        try {
+          await navigator.clipboard.writeText(svgMarkup);
+          setCopyStatus("success");
+          setTimeout(() => setCopyStatus("idle"), 1600);
+          return;
+        } catch {
+          setCopyStatus("idle");
+          setExportError(t.errors.copyFailed);
+          return;
+        }
+      }
       setCopyStatus("idle");
       setExportError(t.errors.copyFailed);
     }

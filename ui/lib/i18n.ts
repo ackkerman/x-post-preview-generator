@@ -57,6 +57,9 @@ export const translations = {
       copied: "Copied",
       download: "Download"
     },
+    toast: {
+      copySuccess: "Copied {format} to clipboard."
+    },
     errors: {
       previewNotReady: "Preview is not ready",
       clipboardUnavailable: "Clipboard API is not available",
@@ -121,6 +124,9 @@ export const translations = {
       copy: "コピー",
       copied: "コピー済み",
       download: "ダウンロード"
+    },
+    toast: {
+      copySuccess: "{format} をクリップボードにコピーしました。"
     },
     errors: {
       previewNotReady: "プレビューの準備ができていません。",
