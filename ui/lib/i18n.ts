@@ -53,6 +53,7 @@ export const translations = {
     },
     buttons: {
       reset: "Reset",
+      clear: "Clear",
       copy: "Copy",
       copied: "Copied",
       download: "Download"
@@ -121,6 +122,7 @@ export const translations = {
     },
     buttons: {
       reset: "リセット",
+      clear: "クリア",
       copy: "コピー",
       copied: "コピー済み",
       download: "ダウンロード"

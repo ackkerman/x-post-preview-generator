@@ -97,6 +97,18 @@ const defaultConfig: PostConfig = {
   mode: "classic"
 };
 
+const clearedConfig: PostConfig = {
+  ...defaultConfig,
+  text: "",
+  name: "",
+  handle: "",
+  verified: false,
+  avatarUrl: "",
+  date: "",
+  likeCount: "",
+  cta: ""
+};
+
 const presets = [
   {
     key: "launchDay",
@@ -458,6 +470,14 @@ export default function Home() {
                   >
                     <RefreshCcw className="h-4 w-4" />
                     {t.buttons.reset}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setConfig(clearedConfig)}
+                  >
+                    {t.buttons.clear}
                   </Button>
                 </div>
               </div>

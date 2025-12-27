@@ -65,8 +65,14 @@ func renderFromJSON(payloadJSON string) (string, error) {
 	name := strings.TrimSpace(payload.Name)
 	handle := strings.TrimSpace(payload.Handle)
 
-	if text == "" || name == "" || handle == "" {
-		return "", errMissingFields()
+	if text == "" {
+		text = "What's happening?"
+	}
+	if name == "" {
+		name = "No Name"
+	}
+	if handle == "" {
+		handle = "unknown"
 	}
 
 	data := render.TweetData{
@@ -101,16 +107,6 @@ func newRejectedPromise(message string) js.Value {
 	promise := promiseConstructor.New(handler)
 	handler.Release()
 	return promise
-}
-
-type missingFieldsError struct{}
-
-func (missingFieldsError) Error() string {
-	return "text, name, handle are required"
-}
-
-func errMissingFields() error {
-	return missingFieldsError{}
 }
 
 func main() {
