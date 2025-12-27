@@ -14,7 +14,7 @@ type htmlView struct {
 	Name          string
 	Handle        string
 	DateLine      string
-	Text          string
+	Text          template.HTML
 	CTA           string
 	Verified      bool
 	ShowFooter    bool
@@ -122,6 +122,8 @@ const htmlTemplate = `<!doctype html>
       font-size: 28px;
       line-height: 1.45;
       white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
     .date-row {
       margin-top: 16px;
@@ -256,7 +258,7 @@ func RenderHTML(data TweetData, opts RenderOptions) (string, error) {
 		Name:          data.Name,
 		Handle:        buildHandleLine(data),
 		DateLine:      buildDateLine(data),
-		Text:          data.Text,
+		Text:          formatHTMLText(data.Text),
 		CTA:           strings.TrimSpace(data.CTA),
 		Verified:      data.Verified,
 		ShowFooter:    !data.Simple,
@@ -286,6 +288,30 @@ func RenderHTML(data TweetData, opts RenderOptions) (string, error) {
 		return "", err
 	}
 	return buf.String(), nil
+}
+
+func formatHTMLText(text string) template.HTML {
+	if strings.TrimSpace(text) == "" {
+		return template.HTML(template.HTMLEscapeString(text))
+	}
+	segments := strings.Split(text, "\n")
+	var builder strings.Builder
+	for i, segment := range segments {
+		if i > 0 {
+			builder.WriteByte('\n')
+		}
+		if segment == "" {
+			continue
+		}
+		tokens := budouxTokens(segment)
+		for j, token := range tokens {
+			builder.WriteString(template.HTMLEscapeString(token))
+			if j < len(tokens)-1 {
+				builder.WriteString("<wbr>")
+			}
+		}
+	}
+	return template.HTML(builder.String())
 }
 
 type htmlIcons struct {

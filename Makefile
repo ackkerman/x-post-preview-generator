@@ -57,6 +57,14 @@ sample:
 		-cta "Read 16K replies" \
 		-output "samples/simple-jack.svg"
 
+	go run ./cmd/xpostgen \
+		-text "金沢で和菓子職人に憧れ、家族の誕生日ケーキから始まった私の甘い執念。いま目黒で、触感と香りまで設計するチョコを作っています。完璧って、食べられるんです。ひとくち、どうぞ。" \
+		-name "ナナチョコ" \
+		-id "aaaaaa18" \
+		-date "12:00 PM - Jan 1, 2021" \
+		-cta "Read 1 replies" \
+		-output "samples/ja.svg"
+
 ui-wasm: build
 	@command -v go >/dev/null 2>&1 || { echo "go is required for ui-wasm"; exit 1; }
 	mkdir -p ui/public/wasm
