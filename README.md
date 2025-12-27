@@ -2,6 +2,8 @@
 
 GoでX(旧Twitter)の埋め込みプレビュー風カードを画像/HTML/SVGとして生成するCLIです。
 
+![](./samples/jack.svg)
+
 ## 使い方
 
 ビルド:

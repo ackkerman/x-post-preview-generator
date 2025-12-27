@@ -175,6 +175,7 @@ func drawAvatar(ctx *gg.Context, data TweetData, layout Layout, fonts FontSet, b
 			ctx.Clip()
 			ctx.DrawImage(resized, int(layout.AvatarX), int(layout.AvatarY))
 			ctx.Pop()
+			ctx.ResetClip()
 			return
 		}
 	}
