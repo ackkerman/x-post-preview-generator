@@ -118,6 +118,7 @@ export default function Home() {
         </header>
 
         <main className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+        
           <section className="space-y-4">
             <div className="sticky top-6 space-y-4">
               <div className="panel flex min-h-[280px] items-center justify-center p-4">
@@ -133,7 +134,12 @@ export default function Home() {
                 ) : null}
                 {previewStatus === "ready" ? (
                   <div
-                    className="w-full [&>svg]:h-auto [&>svg]:w-full"
+                    className="
+                      w-full
+                      [&>svg]:h-auto
+                      [&>svg]:w-full
+                      [&>svg]:drop-shadow-[0_4px_12px_rgba(0,0,0,0.25)]
+                    "
                     dangerouslySetInnerHTML={{ __html: svgMarkup }}
                   />
                 ) : null}
