@@ -111,8 +111,9 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 		}
 	}
 
-	textStartX := padding + avatarSize + gap
-	headerAvailableWidth := width - padding - textStartX - twitterSize - 8
+	headerTextStartX := padding + avatarSize + gap
+	contentStartX := padding
+	headerAvailableWidth := width - padding - headerTextStartX - twitterSize - 8
 	if headerAvailableWidth < 1 {
 		headerAvailableWidth = 1
 	}
@@ -124,7 +125,7 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 	nameLine := ellipsize(data.Name, nameAvailableWidth, fonts.Name)
 	handleLine := ellipsize(buildHandleLine(data), headerAvailableWidth, fonts.Handle)
 
-	textAvailableWidth := width - padding - textStartX
+	textAvailableWidth := width - padding - contentStartX
 	if textAvailableWidth < 1 {
 		textAvailableWidth = 1
 	}
@@ -157,7 +158,7 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 	verifiedY := 0.0
 	if data.Verified {
 		nameWidth := measureString(fonts.Name, nameLine)
-		verifiedX = textStartX + nameWidth + verifiedGap
+		verifiedX = headerTextStartX + nameWidth + verifiedGap
 		verifiedY = nameY - nameAscent + (nameHeight-verifiedSize)/2
 	}
 
@@ -176,18 +177,18 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 			AvatarX:        padding,
 			AvatarY:        padding,
 			HeaderGap:      gap,
-			NameX:          textStartX,
+			NameX:          headerTextStartX,
 			NameY:          nameY,
 			Verified:       data.Verified,
 			VerifiedX:      verifiedX,
 			VerifiedY:      verifiedY,
 			VerifiedSize:   verifiedSize,
-			HandleX:        textStartX,
+			HandleX:        headerTextStartX,
 			HandleY:        handleY,
 			TwitterX:       width - padding - twitterSize,
 			TwitterY:       padding,
 			TwitterSize:    twitterSize,
-			TextX:          textStartX,
+			TextX:          contentStartX,
 			TextY:          textY,
 			TextLines:      textLines,
 			TextLineHeight: textLineHeight,
@@ -261,22 +262,22 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 		AvatarX:        padding,
 		AvatarY:        padding,
 		HeaderGap:      gap,
-		NameX:          textStartX,
+		NameX:          headerTextStartX,
 		NameY:          nameY,
 		Verified:       data.Verified,
 		VerifiedX:      verifiedX,
 		VerifiedY:      verifiedY,
 		VerifiedSize:   verifiedSize,
-		HandleX:        textStartX,
+		HandleX:        headerTextStartX,
 		HandleY:        handleY,
 		TwitterX:       width - padding - twitterSize,
 		TwitterY:       padding,
 		TwitterSize:    twitterSize,
-		TextX:          textStartX,
+		TextX:          contentStartX,
 		TextY:          textY,
 		TextLines:      textLines,
 		TextLineHeight: textLineHeight,
-		DateX:          textStartX,
+		DateX:          contentStartX,
 		DateY:          dateY,
 		InfoX:          infoX,
 		InfoY:          infoY,
@@ -321,7 +322,7 @@ func computeTightWidth(data TweetData, opts RenderOptions, fonts FontSet) float6
 	for _, line := range strings.Split(data.Text, "\n") {
 		textWidth = math.Max(textWidth, measureString(fonts.Text, line))
 	}
-	textBlockWidth := padding + avatarSize + gap + textWidth + padding
+	textBlockWidth := padding + textWidth + padding
 
 	maxWidth := math.Max(headerWidth, textBlockWidth)
 
@@ -329,7 +330,7 @@ func computeTightWidth(data TweetData, opts RenderOptions, fonts FontSet) float6
 		dateLine := buildDateLine(data)
 		if dateLine != "" {
 			dateWidth := measureString(fonts.Meta, dateLine)
-			dateRowWidth := padding + avatarSize + gap + dateWidth + 8 + infoSize + padding
+			dateRowWidth := padding + dateWidth + 8 + infoSize + padding
 			maxWidth = math.Max(maxWidth, dateRowWidth)
 		}
 
