@@ -1,0 +1,5 @@
+{
+  "name": "x-post-preview-generator",
+  "private": true,
+  "packageManager": "pnpm@10.18.3"
+}
