@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "vercel-build": "make -C .. ui-wasm && next build",
     "start": "next start",
     "lint": "next lint"
   },
