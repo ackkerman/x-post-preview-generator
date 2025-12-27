@@ -5,7 +5,7 @@ export const translations = {
       placeholder: "Select language"
     },
     app: {
-      name: "X Post Preview Studio",
+      name: "Post Preview Studio",
       title: "Shape your next X post before it hits the feed.",
       description:
         "Tune voice, layout, and engagement cues in one place. Export the preview and move fast with a consistent look."
@@ -75,7 +75,7 @@ export const translations = {
       placeholder: "言語を選択"
     },
     app: {
-      name: "X投稿プレビュースタジオ",
+      name: "Post Preview Studio",
       title: "投稿前にXのプレビューを整えよう。",
       description: "文体やレイアウト、反応のニュアンスをまとめて調整。プレビューを書き出して素早く共有できます。"
     },

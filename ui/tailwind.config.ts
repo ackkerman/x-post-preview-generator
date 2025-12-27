@@ -16,8 +16,7 @@ const config: Config = {
         border: "var(--border)"
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        serif: ["var(--font-serif)", "serif"]
+        sans: ["var(--font-sans)", "\"Noto Sans JP\"", "system-ui", "sans-serif"]
       },
       boxShadow: {
         glow: "0 24px 60px -24px rgba(15, 23, 42, 0.35)",

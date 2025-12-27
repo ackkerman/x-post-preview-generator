@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Download, RefreshCcw, Sparkles } from "lucide-react";
+import { Copy, Download, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -260,16 +260,15 @@ export default function Home() {
 
   return (
     <div className="relative">
-      <div className="pointer-events-none absolute inset-0 grid-overlay opacity-30" />
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-6 py-12">
-        <header className="flex flex-col gap-4">
+      <div className="mx-auto flex min-h-screen max-w-[1200px] flex-col gap-12 px-6 py-16">
+        <header className="flex flex-col gap-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.3em] text-muted">
-              <Sparkles className="h-4 w-4 text-accent" />
+            <div className="flex items-center gap-3 text-xs font-semibold text-muted">
+              <img src="/x.png" alt="X logo" className="h-4 w-4" />
               {t.app.name}
             </div>
             <div className="flex items-center gap-3">
-              <Label htmlFor="language" className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+              <Label htmlFor="language" className="text-xs font-semibold text-muted">
                 {t.language.label}
               </Label>
               <Select
@@ -289,7 +288,7 @@ export default function Home() {
               </Select>
             </div>
           </div>
-          <h1 className="max-w-2xl text-4xl font-semibold leading-tight text-ink md:text-5xl">
+          <h1 className="max-w-2xl text-4xl font-extrabold leading-tight text-ink md:text-5xl">
             {t.app.title}
           </h1>
           <p className="max-w-2xl text-base text-muted">{t.app.description}</p>
@@ -316,7 +315,6 @@ export default function Home() {
                       w-full
                       [&>svg]:h-auto
                       [&>svg]:w-full
-                      [&>svg]:drop-shadow-[0_4px_12px_rgba(0,0,0,0.25)]
                     "
                     dangerouslySetInnerHTML={{ __html: stripXmlDeclaration(svgMarkup) }}
                   />
@@ -325,7 +323,7 @@ export default function Home() {
             </div>
           </section>
         
-          <Card className="animate-fade-up">
+          <Card>
             <CardHeader>
               <CardTitle>{t.controls.title}</CardTitle>
               <CardDescription>{t.controls.description}</CardDescription>
@@ -433,7 +431,7 @@ export default function Home() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white/70 px-4 py-3">
+                <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-white px-4 py-3">
                   <div>
                     <Label htmlFor="verified">{t.labels.verified}</Label>
                     <p className="text-xs text-muted">{t.labels.verifiedHint}</p>
