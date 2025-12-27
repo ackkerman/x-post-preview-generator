@@ -4,15 +4,16 @@ import "image/color"
 
 // TweetData holds the values to render.
 type TweetData struct {
-	Text     string
-	Icon     string
-	Name     string
-	Handle   string
-	Date     string
-	Location string
-	CTA      string
-	Verified bool
-	Simple   bool
+	Text      string
+	Icon      string
+	Name      string
+	Handle    string
+	Date      string
+	Location  string
+	CTA       string
+	Verified  bool
+	Simple    bool
+	LikeCount string
 }
 
 // RenderOptions controls output sizes, fonts, and theme.

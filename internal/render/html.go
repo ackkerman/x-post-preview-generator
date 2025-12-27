@@ -31,11 +31,8 @@ type htmlView struct {
 	AvatarText    string
 	TwitterIcon   template.HTML
 	VerifiedIcon  template.HTML
-	ReplyIcon     template.HTML
-	RetweetIcon   template.HTML
-	LikeIcon      template.HTML
-	LinkIcon      template.HTML
 	InfoIcon      template.HTML
+	Actions       []htmlAction
 }
 
 const htmlTemplate = `<!doctype html>
@@ -218,10 +215,9 @@ const htmlTemplate = `<!doctype html>
       <div class="divider" style="margin-top: 16px;"></div>
       {{end}}
       <div class="actions">
-        <div class="action icon">{{.ReplyIcon}}<span>Reply</span></div>
-        <div class="action icon">{{.RetweetIcon}}<span>Retweet</span></div>
-        <div class="action icon">{{.LikeIcon}}<span>Like</span></div>
-        <div class="action icon">{{.LinkIcon}}<span>Copy link</span></div>
+        {{range .Actions}}
+        <div class="action icon">{{.Icon}}<span>{{.Label}}</span></div>
+        {{end}}
       </div>
       {{if .CTA}}
       <div class="cta">{{.CTA}}</div>
@@ -269,12 +265,9 @@ func RenderHTML(data TweetData, opts RenderOptions) (string, error) {
 		AvatarText:    opts.Theme.AvatarText,
 		TwitterIcon:   icons.Twitter,
 		VerifiedIcon:  icons.Verified,
-		ReplyIcon:     icons.Reply,
-		RetweetIcon:   icons.Retweet,
-		LikeIcon:      icons.Like,
-		LinkIcon:      icons.Link,
 		InfoIcon:      icons.Info,
 	}
+	view.Actions = buildHTMLActions(data, icons)
 
 	tmpl, err := template.New("tweet").Parse(htmlTemplate)
 	if err != nil {
@@ -291,10 +284,14 @@ type htmlIcons struct {
 	Twitter  template.HTML
 	Verified template.HTML
 	Reply    template.HTML
-	Retweet  template.HTML
 	Like     template.HTML
 	Link     template.HTML
 	Info     template.HTML
+}
+
+type htmlAction struct {
+	Icon  template.HTML
+	Label string
 }
 
 func loadHTMLIcons() (htmlIcons, error) {
@@ -307,9 +304,6 @@ func loadHTMLIcons() (htmlIcons, error) {
 		return icons, err
 	}
 	if icons.Reply, err = iconHTML("reply"); err != nil {
-		return icons, err
-	}
-	if icons.Retweet, err = iconHTML("retweet"); err != nil {
 		return icons, err
 	}
 	if icons.Like, err = iconHTML("like"); err != nil {
@@ -330,4 +324,27 @@ func iconHTML(name string) (template.HTML, error) {
 		return "", err
 	}
 	return template.HTML(icon), nil
+}
+
+func buildHTMLActions(data TweetData, icons htmlIcons) []htmlAction {
+	actions := buildActions(data)
+	out := make([]htmlAction, 0, len(actions))
+	for _, action := range actions {
+		var icon template.HTML
+		switch action.IconName {
+		case "reply":
+			icon = icons.Reply
+		case "like":
+			icon = icons.Like
+		case "link":
+			icon = icons.Link
+		default:
+			continue
+		}
+		out = append(out, htmlAction{
+			Icon:  icon,
+			Label: action.Label,
+		})
+	}
+	return out
 }

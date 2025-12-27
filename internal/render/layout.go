@@ -73,11 +73,14 @@ func buildDateLine(data TweetData) string {
 	return strings.Join(parts, " · ")
 }
 
-func defaultActions() []ActionLayout {
+func buildActions(data TweetData) []ActionLayout {
+	likeLabel := strings.TrimSpace(data.LikeCount)
+	if likeLabel == "" {
+		likeLabel = "0"
+	}
 	return []ActionLayout{
+		{IconName: "like", Label: likeLabel},
 		{IconName: "reply", Label: "Reply"},
-		{IconName: "retweet", Label: "Retweet"},
-		{IconName: "like", Label: "Like"},
 		{IconName: "link", Label: "Copy link"},
 	}
 }
@@ -204,7 +207,7 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 	actionsBaseline := actionsTop + (actionRowHeight-actionHeight)/2 + actionHeight
 	cursorY = actionsTop + actionRowHeight
 
-	actions := defaultActions()
+	actions := buildActions(data)
 	actionX := padding
 	for i := range actions {
 		labelWidth := measureString(fonts.Action, actions[i].Label)
