@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="331" viewBox="0 0 960 331" role="img" aria-label="X post preview">
-  <rect x="1" y="1" width="958" height="329" rx="20" ry="20" fill="#FFFFFF" stroke="#E1E8ED" stroke-width="1.5" />
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="331" viewBox="0 0 600 331" role="img" aria-label="X post preview">
+  <rect x="1" y="1" width="598" height="329" rx="20" ry="20" fill="#FFFFFF" stroke="#E1E8ED" stroke-width="1.5" />
   
   <defs>
     <clipPath id="avatar-clip">
@@ -11,10 +11,15 @@
   
 
   <text x="112" y="65" fill="#0F1419" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="28" font-weight="700">jack</text>
-  <svg x="174.00" y="38.50" width="20.00" height="20.00" viewBox="0 0 22 22" aria-label="Verified account" role="img" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-bnwqim r-lrvibr r-m6rgpd r-1cvl2hr r-f9ja8p r-og9te1 r-3t4u6i" data-testid="icon-verified"><g><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"></path></g></svg>
+  <svg x="174.00" y="33.50" width="30.00" height="30.00"
+  viewBox="0 0 22 22"
+  aria-label="Verified account"
+  role="img"
+  fill="#1D9BF0"
+><g><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"></path></g></svg>
   <text x="112" y="95" fill="#536471" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="22">@jack</text>
 
-  <svg x="898.00" y="32.00" width="30.00" height="30.00" viewBox="0 0 24 24" aria-hidden="true" class="r-18jsvk2 r-4qtqp9 r-yyyyoo r-6zzn7w r-19fsva8 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-q1j0wu"><g><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></g></svg>
+  <svg x="538.00" y="32.00" width="30.00" height="30.00" viewBox="0 0 24 24" aria-hidden="true" class="r-18jsvk2 r-4qtqp9 r-yyyyoo r-6zzn7w r-19fsva8 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-q1j0wu"><g><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></g></svg>
 
   
   <text x="112" y="145" fill="#0F1419" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="28">just setting up my twttr</text>
@@ -23,25 +28,25 @@
   
   
   <text x="112" y="187" fill="#536471" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="22">5:50 AM - Mar 22, 2006</text>
-  <svg x="908.00" y="164.00" width="20.00" height="20.00" viewBox="0 0 24 24" aria-hidden="true" class="r-14j79pv r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr"><g><path d="M13.5 8.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5S11.17 7 12 7s1.5.67 1.5 1.5zM13 17v-5h-2v5h2zm-1 5.25c5.66 0 10.25-4.59 10.25-10.25S17.66 1.75 12 1.75 1.75 6.34 1.75 12 6.34 22.25 12 22.25zM20.25 12c0 4.56-3.69 8.25-8.25 8.25S3.75 16.56 3.75 12 7.44 3.75 12 3.75s8.25 3.69 8.25 8.25z"></path></g></svg>
+  <svg x="548.00" y="164.00" width="20.00" height="20.00" viewBox="0 0 24 24" aria-hidden="true" class="r-14j79pv r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr"><g><path d="M13.5 8.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5S11.17 7 12 7s1.5.67 1.5 1.5zM13 17v-5h-2v5h2zm-1 5.25c5.66 0 10.25-4.59 10.25-10.25S17.66 1.75 12 1.75 1.75 6.34 1.75 12 6.34 22.25 12 22.25zM20.25 12c0 4.56-3.69 8.25-8.25 8.25S3.75 16.56 3.75 12 7.44 3.75 12 3.75s8.25 3.69 8.25 8.25z"></path></g></svg>
   
 
-  <line x1="32" y1="199" x2="928" y2="199" stroke="#E6ECF0" stroke-width="1" />
+  <line x1="32" y1="199" x2="568" y2="199" stroke="#E6ECF0" stroke-width="1" />
 
   
   <svg x="32.00" y="216.00" width="22.00" height="22.00" viewBox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-dnmrzs r-bnwqim r-lrvibr r-m6rgpd r-50lct3 r-1srniue"><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg>
-  <text x="62" y="239" fill="#536471" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="20">16K</text>
+  <text x="62" y="239" fill="#536471" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="20">262K</text>
   
-  <svg x="129.00" y="216.00" width="22.00" height="22.00" viewBox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-dnmrzs r-bnwqim r-lrvibr r-m6rgpd r-50lct3 r-1srniue"><g><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"></path></g></svg>
-  <text x="159" y="239" fill="#536471" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="20">Reply</text>
+  <svg x="140.00" y="216.00" width="22.00" height="22.00" viewBox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-dnmrzs r-bnwqim r-lrvibr r-m6rgpd r-50lct3 r-1srniue"><g><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"></path></g></svg>
+  <text x="170" y="239" fill="#536471" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="20">Reply</text>
   
-  <svg x="242.00" y="216.00" width="22.00" height="22.00" viewBox="0 0 24 24" aria-hidden="true" class="r-14j79pv r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr" style=""><g><path d="M18.36 5.64c-1.95-1.96-5.11-1.96-7.07 0L9.88 7.05 8.46 5.64l1.42-1.42c2.73-2.73 7.16-2.73 9.9 0 2.73 2.74 2.73 7.17 0 9.9l-1.42 1.42-1.41-1.42 1.41-1.41c1.96-1.96 1.96-5.12 0-7.07zm-2.12 3.53l-7.07 7.07-1.41-1.41 7.07-7.07 1.41 1.41zm-12.02.71l1.42-1.42 1.41 1.42-1.41 1.41c-1.96 1.96-1.96 5.12 0 7.07 1.95 1.96 5.11 1.96 7.07 0l1.41-1.41 1.42 1.41-1.42 1.42c-2.73 2.73-7.16 2.73-9.9 0-2.73-2.74-2.73-7.17 0-9.9z"></path></g></svg>
-  <text x="272" y="239" fill="#536471" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="20">Copy link</text>
+  <svg x="253.00" y="216.00" width="22.00" height="22.00" viewBox="0 0 24 24" aria-hidden="true" class="r-14j79pv r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr" style=""><g><path d="M18.36 5.64c-1.95-1.96-5.11-1.96-7.07 0L9.88 7.05 8.46 5.64l1.42-1.42c2.73-2.73 7.16-2.73 9.9 0 2.73 2.74 2.73 7.17 0 9.9l-1.42 1.42-1.41-1.42 1.41-1.41c1.96-1.96 1.96-5.12 0-7.07zm-2.12 3.53l-7.07 7.07-1.41-1.41 7.07-7.07 1.41 1.41zm-12.02.71l1.42-1.42 1.41 1.42-1.41 1.41c-1.96 1.96-1.96 5.12 0 7.07 1.95 1.96 5.11 1.96 7.07 0l1.41-1.41 1.42 1.41-1.42 1.42c-2.73 2.73-7.16 2.73-9.9 0-2.73-2.74-2.73-7.17 0-9.9z"></path></g></svg>
+  <text x="283" y="239" fill="#536471" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="20">Copy link</text>
   
 
   
-  <rect x="32" y="255" width="896" height="44" rx="22" ry="22" fill="#FFFFFF" stroke="#E6ECF0" stroke-width="1" />
-  <text x="399.5" y="287" fill="#1DA1F2" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="20" font-weight="600">Read 16K replies</text>
+  <rect x="32" y="255" width="536" height="44" rx="22" ry="22" fill="#FFFFFF" stroke="#E6ECF0" stroke-width="1" />
+  <text x="219.5" y="287" fill="#1DA1F2" font-family="'Helvetica Neue', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, 'Noto Sans JP', Arial, sans-serif" font-size="20" font-weight="600">Read 16K replies</text>
   
   
 </svg>

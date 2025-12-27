@@ -96,9 +96,20 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 	infoSize := 20.0
 	actionIconSize := 22.0
 	ctaHeight := 44.0
-	verifiedSize := 20.0
+	verifiedSize := 30.0
 	verifiedGap := 6.0
 	showFooter := !data.Simple
+	minWidth := 600.0
+
+	if strings.EqualFold(opts.WidthMode, "tight") {
+		width = computeTightWidth(data, opts, fonts)
+		if width < minWidth {
+			width = minWidth
+		}
+		if opts.Width > 0 && float64(opts.Width) > minWidth && width > float64(opts.Width) {
+			width = float64(opts.Width)
+		}
+	}
 
 	textStartX := padding + avatarSize + gap
 	headerAvailableWidth := width - padding - textStartX - twitterSize - 8
@@ -277,4 +288,63 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 		HandleLine:     handleLine,
 		DateLine:       dateLine,
 	}
+}
+
+func computeTightWidth(data TweetData, opts RenderOptions, fonts FontSet) float64 {
+	padding := float64(opts.Padding)
+	avatarSize := float64(opts.AvatarSize)
+	gap := float64(opts.Gap)
+	twitterSize := 30.0
+	verifiedSize := 20.0
+	verifiedGap := 6.0
+	infoSize := 20.0
+	actionIconSize := 22.0
+	actionGap := 8.0
+	actionSpacing := 32.0
+
+	nameWidth := measureString(fonts.Name, strings.TrimSpace(data.Name))
+	if data.Verified {
+		nameWidth += verifiedSize + verifiedGap
+	}
+	handleWidth := measureString(fonts.Handle, normalizeHandle(data.Handle))
+	headerTextWidth := math.Max(nameWidth, handleWidth)
+	headerWidth := padding + avatarSize + gap + headerTextWidth + twitterSize + 8 + padding
+
+	textWidth := 0.0
+	for _, line := range strings.Split(data.Text, "\n") {
+		textWidth = math.Max(textWidth, measureString(fonts.Text, line))
+	}
+	textBlockWidth := padding + avatarSize + gap + textWidth + padding
+
+	maxWidth := math.Max(headerWidth, textBlockWidth)
+
+	if !data.Simple {
+		dateLine := buildDateLine(data)
+		if dateLine != "" {
+			dateWidth := measureString(fonts.Meta, dateLine)
+			dateRowWidth := padding + avatarSize + gap + dateWidth + 8 + infoSize + padding
+			maxWidth = math.Max(maxWidth, dateRowWidth)
+		}
+
+		actions := buildActions(data)
+		actionsWidth := padding
+		for i, action := range actions {
+			labelWidth := measureString(fonts.Action, action.Label)
+			actionsWidth += actionIconSize + actionGap + labelWidth
+			if i < len(actions)-1 {
+				actionsWidth += actionSpacing
+			}
+		}
+		actionsWidth += padding
+		maxWidth = math.Max(maxWidth, actionsWidth)
+
+		cta := strings.TrimSpace(data.CTA)
+		if cta != "" {
+			ctaTextWidth := measureString(fonts.CTA, cta)
+			ctaWidth := padding*2 + ctaTextWidth + 40
+			maxWidth = math.Max(maxWidth, ctaWidth)
+		}
+	}
+
+	return math.Ceil(maxWidth)
 }

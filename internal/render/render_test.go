@@ -117,3 +117,39 @@ func TestSimpleModeHTML(t *testing.T) {
 		t.Fatalf("simple mode should hide footer actions")
 	}
 }
+
+func TestTightWidthMode(t *testing.T) {
+	opts := DefaultOptions()
+	opts.WidthMode = "tight"
+	opts.Width = 800
+	data := TweetData{
+		Text:   "short",
+		Name:   "Example",
+		Handle: "example",
+	}
+	img, err := RenderImage(data, opts)
+	if err != nil {
+		t.Fatalf("RenderImage: %v", err)
+	}
+	if img.Bounds().Dx() >= opts.Width {
+		t.Fatalf("expected tight width to be smaller than %d", opts.Width)
+	}
+}
+
+func TestTightWidthMin(t *testing.T) {
+	opts := DefaultOptions()
+	opts.WidthMode = "tight"
+	opts.Width = 300
+	data := TweetData{
+		Text:   "short",
+		Name:   "Example",
+		Handle: "example",
+	}
+	img, err := RenderImage(data, opts)
+	if err != nil {
+		t.Fatalf("RenderImage: %v", err)
+	}
+	if img.Bounds().Dx() < 400 {
+		t.Fatalf("expected minimum width of 400, got %d", img.Bounds().Dx())
+	}
+}

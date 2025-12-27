@@ -25,6 +25,7 @@ type RenderOptions struct {
 	FontPath     string
 	BoldFontPath string
 	FontFamily   string
+	WidthMode    string
 	Theme        Theme
 }
 
@@ -48,6 +49,7 @@ func DefaultOptions() RenderOptions {
 		AvatarSize: 64,
 		Gap:        16,
 		FontFamily: "\"Helvetica Neue\", \"SF Pro Text\", \"SF Pro Display\", \"Segoe UI\", Roboto, \"Noto Sans JP\", Arial, sans-serif",
+		WidthMode:  "fixed",
 		Theme:      LightTheme(),
 	}
 }
@@ -96,6 +98,9 @@ func normalizeOptions(opts RenderOptions) RenderOptions {
 	}
 	if opts.FontFamily == "" {
 		opts.FontFamily = def.FontFamily
+	}
+	if opts.WidthMode == "" {
+		opts.WidthMode = def.WidthMode
 	}
 	if opts.Theme.Background == "" {
 		opts.Theme = def.Theme
