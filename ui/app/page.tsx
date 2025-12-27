@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Copy, Download, RefreshCcw, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,77 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { languageOptions, translations, type Language } from "@/lib/i18n";
 import { type PostConfig } from "@/lib/post-config";
 import { renderSvg } from "@/lib/wasm";
+
+type ExportFormat = "svg" | "png";
+
+function parseSvgSize(svgMarkup: string) {
+  const document = new DOMParser().parseFromString(svgMarkup, "image/svg+xml");
+  const svg = document.querySelector("svg");
+  if (!svg) {
+    throw new Error("SVG parse failed");
+  }
+
+  const widthAttr = svg.getAttribute("width");
+  const heightAttr = svg.getAttribute("height");
+  const width = widthAttr ? Number.parseFloat(widthAttr) : Number.NaN;
+  const height = heightAttr ? Number.parseFloat(heightAttr) : Number.NaN;
+
+  if (Number.isFinite(width) && Number.isFinite(height)) {
+    return { width, height };
+  }
+
+  const viewBox = svg.getAttribute("viewBox");
+  if (viewBox) {
+    const parts = viewBox.split(/[\s,]+/).map((value) => Number.parseFloat(value));
+    if (parts.length === 4 && parts.every((value) => Number.isFinite(value))) {
+      return { width: parts[2], height: parts[3] };
+    }
+  }
+
+  return { width: 960, height: 540 };
+}
+
+async function svgToPngBlob(svgMarkup: string) {
+  const { width, height } = parseSvgSize(svgMarkup);
+  const svgBlob = new Blob([svgMarkup], { type: "image/svg+xml" });
+  const url = URL.createObjectURL(svgBlob);
+
+  return new Promise<Blob>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.floor(width));
+      canvas.height = Math.max(1, Math.floor(height));
+      const context = canvas.getContext("2d");
+      if (!context) {
+        URL.revokeObjectURL(url);
+        reject(new Error("Canvas is not available"));
+        return;
+      }
+      context.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => {
+        URL.revokeObjectURL(url);
+        if (!blob) {
+          reject(new Error("Failed to export PNG"));
+          return;
+        }
+        resolve(blob);
+      }, "image/png");
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load SVG for PNG export"));
+    };
+    img.src = url;
+  });
+}
+
+function stripXmlDeclaration(svgMarkup: string) {
+  return svgMarkup.replace(/^<\?xml[^>]*>\s*/i, "");
+}
 
 const defaultConfig: PostConfig = {
   text: "Just shipped a preview generator that turns raw text into a polished X post mock. What should we build next?",
@@ -27,9 +96,9 @@ const defaultConfig: PostConfig = {
   mode: "classic"
 };
 
-const presets: Array<{ label: string; value: PostConfig }> = [
+const presets = [
   {
-    label: "Launch Day",
+    key: "launchDay",
     value: {
       ...defaultConfig,
       text: "We just shipped v2.0. Cleaner layout, faster renders, and export-ready previews. Big thanks to everyone who tested it!",
@@ -38,7 +107,7 @@ const presets: Array<{ label: string; value: PostConfig }> = [
     }
   },
   {
-    label: "Minimal",
+    key: "minimal",
     value: {
       ...defaultConfig,
       mode: "simple",
@@ -47,16 +116,18 @@ const presets: Array<{ label: string; value: PostConfig }> = [
       cta: ""
     }
   }
-];
+] as const;
 
 export default function Home() {
+  const [language, setLanguage] = useState<Language>("en");
   const [config, setConfig] = useState<PostConfig>(defaultConfig);
-  const [copied, setCopied] = useState(false);
+  const [exportFormat, setExportFormat] = useState<ExportFormat>("svg");
+  const [copyStatus, setCopyStatus] = useState<"idle" | "success">("idle");
+  const [exportError, setExportError] = useState("");
   const [svgMarkup, setSvgMarkup] = useState<string>("");
   const [previewStatus, setPreviewStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [previewError, setPreviewError] = useState<string>("");
-
-  const payload = useMemo(() => JSON.stringify(config, null, 2), [config]);
+  const t = translations[language];
 
   useEffect(() => {
     let cancelled = false;
@@ -72,7 +143,7 @@ export default function Home() {
       .catch((error) => {
         if (cancelled) return;
         setPreviewStatus("error");
-        setPreviewError(error instanceof Error ? error.message : "Failed to render preview");
+        setPreviewError(error instanceof Error ? error.message : "");
       });
 
     return () => {
@@ -81,23 +152,82 @@ export default function Home() {
   }, [config]);
 
   const handleCopy = async () => {
+    setExportError("");
+    if (!svgMarkup) {
+      setExportError(t.errors.previewNotReady);
+      return;
+    }
+
+    let blob: Blob;
+    let mimeType: string;
+    if (exportFormat === "svg") {
+      blob = new Blob([svgMarkup], { type: "image/svg+xml" });
+      mimeType = "image/svg+xml";
+    } else {
+      try {
+        blob = await svgToPngBlob(svgMarkup);
+      } catch {
+        setExportError(t.errors.pngExportFailed);
+        return;
+      }
+      mimeType = "image/png";
+    }
+
+    if (!navigator.clipboard?.write) {
+      if (exportFormat === "svg" && navigator.clipboard?.writeText) {
+        try {
+          await navigator.clipboard.writeText(svgMarkup);
+          setCopyStatus("success");
+          setTimeout(() => setCopyStatus("idle"), 1600);
+        } catch {
+          setCopyStatus("idle");
+          setExportError(t.errors.copyFailed);
+        }
+        return;
+      }
+      setExportError(t.errors.clipboardUnavailable);
+      return;
+    }
+
     try {
-      await navigator.clipboard.writeText(payload);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
+      await navigator.clipboard.write([new ClipboardItem({ [mimeType]: blob })]);
+      setCopyStatus("success");
+      setTimeout(() => setCopyStatus("idle"), 1600);
     } catch {
-      setCopied(false);
+      setCopyStatus("idle");
+      setExportError(t.errors.copyFailed);
     }
   };
 
-  const handleDownload = () => {
-    const blob = new Blob([payload], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "x-post-config.json";
-    link.click();
-    URL.revokeObjectURL(url);
+  const handleDownload = async () => {
+    setExportError("");
+    if (!svgMarkup) {
+      setExportError(t.errors.previewNotReady);
+      return;
+    }
+
+    let blob: Blob;
+    if (exportFormat === "svg") {
+      blob = new Blob([svgMarkup], { type: "image/svg+xml" });
+    } else {
+      try {
+        blob = await svgToPngBlob(svgMarkup);
+      } catch {
+        setExportError(t.errors.pngExportFailed);
+        return;
+      }
+    }
+
+    try {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `x-post-preview.${exportFormat}`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setExportError(t.errors.downloadFailed);
+    }
   };
 
   return (
@@ -105,16 +235,36 @@ export default function Home() {
       <div className="pointer-events-none absolute inset-0 grid-overlay opacity-30" />
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-6 py-12">
         <header className="flex flex-col gap-4">
-          <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.3em] text-muted">
-            <Sparkles className="h-4 w-4 text-accent" />
-            X Post Preview Studio
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.3em] text-muted">
+              <Sparkles className="h-4 w-4 text-accent" />
+              {t.app.name}
+            </div>
+            <div className="flex items-center gap-3">
+              <Label htmlFor="language" className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                {t.language.label}
+              </Label>
+              <Select
+                value={language}
+                onValueChange={(value) => setLanguage(value as Language)}
+              >
+                <SelectTrigger id="language" className="h-9 w-40">
+                  <SelectValue placeholder={t.language.placeholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  {languageOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           <h1 className="max-w-2xl text-4xl font-semibold leading-tight text-ink md:text-5xl">
-            Shape your next X post before it hits the feed.
+            {t.app.title}
           </h1>
-          <p className="max-w-2xl text-base text-muted">
-            Tune voice, layout, and engagement cues in one place. Export the config and move fast with a consistent preview.
-          </p>
+          <p className="max-w-2xl text-base text-muted">{t.app.description}</p>
         </header>
 
         <main className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
@@ -123,13 +273,13 @@ export default function Home() {
             <div className="sticky top-6 space-y-4">
               <div className="panel flex min-h-[280px] items-center justify-center p-4">
                 {previewStatus === "loading" ? (
-                  <div className="text-sm text-muted">Rendering preview...</div>
+                  <div className="text-sm text-muted">{t.preview.loading}</div>
                 ) : null}
                 {previewStatus === "error" ? (
                   <div className="space-y-2 text-center text-sm text-muted">
-                    <p>Preview failed.</p>
+                    <p>{t.preview.failed}</p>
                     <p className="text-xs">{previewError}</p>
-                    <p className="text-xs">Run `make ui-wasm` to rebuild the wasm bundle.</p>
+                    <p className="text-xs">{t.preview.rebuildHint}</p>
                   </div>
                 ) : null}
                 {previewStatus === "ready" ? (
@@ -140,7 +290,7 @@ export default function Home() {
                       [&>svg]:w-full
                       [&>svg]:drop-shadow-[0_4px_12px_rgba(0,0,0,0.25)]
                     "
-                    dangerouslySetInnerHTML={{ __html: svgMarkup }}
+                    dangerouslySetInnerHTML={{ __html: stripXmlDeclaration(svgMarkup) }}
                   />
                 ) : null}
               </div>
@@ -149,12 +299,12 @@ export default function Home() {
         
           <Card className="animate-fade-up">
             <CardHeader>
-              <CardTitle>Post controls</CardTitle>
-              <CardDescription>Update the inputs to see the preview refresh instantly.</CardDescription>
+              <CardTitle>{t.controls.title}</CardTitle>
+              <CardDescription>{t.controls.description}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="text">Post text</Label>
+                <Label htmlFor="text">{t.labels.text}</Label>
                 <Textarea
                   id="text"
                   value={config.text}
@@ -164,7 +314,7 @@ export default function Home() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Display name</Label>
+                  <Label htmlFor="name">{t.labels.name}</Label>
                   <Input
                     id="name"
                     value={config.name}
@@ -172,7 +322,7 @@ export default function Home() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="handle">Handle</Label>
+                  <Label htmlFor="handle">{t.labels.handle}</Label>
                   <Input
                     id="handle"
                     value={config.handle}
@@ -183,7 +333,7 @@ export default function Home() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="avatar">Avatar image URL</Label>
+                  <Label htmlFor="avatar">{t.labels.avatar}</Label>
                   <Input
                     id="avatar"
                     placeholder="https://"
@@ -192,7 +342,7 @@ export default function Home() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="date">Date line</Label>
+                  <Label htmlFor="date">{t.labels.date}</Label>
                   <Input
                     id="date"
                     value={config.date}
@@ -203,7 +353,7 @@ export default function Home() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="likes">Like count</Label>
+                  <Label htmlFor="likes">{t.labels.likes}</Label>
                   <Input
                     id="likes"
                     value={config.likeCount}
@@ -211,7 +361,7 @@ export default function Home() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cta">CTA text</Label>
+                  <Label htmlFor="cta">{t.labels.cta}</Label>
                   <Input
                     id="cta"
                     value={config.cta}
@@ -222,7 +372,7 @@ export default function Home() {
 
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="space-y-2">
-                  <Label>Layout</Label>
+                  <Label>{t.labels.layout}</Label>
                   <Select
                     value={config.mode}
                     onValueChange={(value) =>
@@ -230,16 +380,16 @@ export default function Home() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select layout" />
+                      <SelectValue placeholder={t.placeholders.layout} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="classic">Classic</SelectItem>
-                      <SelectItem value="simple">Simple</SelectItem>
+                      <SelectItem value="classic">{t.options.classic}</SelectItem>
+                      <SelectItem value="simple">{t.options.simple}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Width</Label>
+                  <Label>{t.labels.width}</Label>
                   <Select
                     value={config.width}
                     onValueChange={(value) =>
@@ -247,18 +397,18 @@ export default function Home() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select width" />
+                      <SelectValue placeholder={t.placeholders.width} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="tight">Tight</SelectItem>
-                      <SelectItem value="wide">Wide</SelectItem>
+                      <SelectItem value="tight">{t.options.tight}</SelectItem>
+                      <SelectItem value="wide">{t.options.wide}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white/70 px-4 py-3">
                   <div>
-                    <Label htmlFor="verified">Verified</Label>
-                    <p className="text-xs text-muted">Show the badge</p>
+                    <Label htmlFor="verified">{t.labels.verified}</Label>
+                    <p className="text-xs text-muted">{t.labels.verifiedHint}</p>
                   </div>
                   <Switch
                     id="verified"
@@ -271,17 +421,17 @@ export default function Home() {
               <Separator />
 
               <div className="space-y-3">
-                <Label>Quick presets</Label>
+                <Label>{t.labels.presets}</Label>
                 <div className="flex flex-wrap gap-3">
                   {presets.map((preset) => (
                     <Button
-                      key={preset.label}
+                      key={preset.key}
                       type="button"
                       variant="outline"
                       size="sm"
                       onClick={() => setConfig(preset.value)}
                     >
-                      {preset.label}
+                      {t.presets[preset.key]}
                     </Button>
                   ))}
                   <Button
@@ -291,23 +441,40 @@ export default function Home() {
                     onClick={() => setConfig(defaultConfig)}
                   >
                     <RefreshCcw className="h-4 w-4" />
-                    Reset
+                    {t.buttons.reset}
                   </Button>
                 </div>
               </div>
 
               <Separator />
 
+              <div className="space-y-3">
+                <Label>{t.labels.exportFormat}</Label>
+                <Select
+                  value={exportFormat}
+                  onValueChange={(value) => setExportFormat(value as ExportFormat)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t.placeholders.format} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="svg">{t.options.svg}</SelectItem>
+                    <SelectItem value="png">{t.options.png}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="flex flex-wrap gap-3">
                 <Button type="button" onClick={handleCopy} variant="secondary">
                   <Copy className="h-4 w-4" />
-                  {copied ? "Copied" : "Copy JSON"}
+                  {copyStatus === "success" ? t.buttons.copied : t.buttons.copy}
                 </Button>
                 <Button type="button" onClick={handleDownload} variant="outline">
                   <Download className="h-4 w-4" />
-                  Download JSON
+                  {t.buttons.download}
                 </Button>
               </div>
+              {exportError ? <p className="text-xs text-rose-600">{exportError}</p> : null}
             </CardContent>
           </Card>
         </main>

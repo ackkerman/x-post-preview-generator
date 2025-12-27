@@ -60,7 +60,7 @@ sample:
 		-cta "Read 16K replies" \
 		-output "samples/simple-jack.svg"
 
-ui-wasm:
+ui-wasm: build
 	mkdir -p ui/public/wasm
 	GOOS=js GOARCH=wasm go build -o ui/public/wasm/xpostgen.wasm ./cmd/xpostgen-wasm
 	if [ -f "$(WASM_EXEC)" ]; then \
