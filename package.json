@@ -1,0 +1,6 @@
+{
+  "engines": {
+    "node": "25.x"
+  },
+  "packageManager": "pnpm@10.18.3"
+}
