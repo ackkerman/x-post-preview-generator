@@ -52,6 +52,11 @@ func lineHeight(face font.Face) float64 {
 	return float64(m.Height) / 64.0
 }
 
+func fontAscentDescent(face font.Face) (float64, float64) {
+	m := face.Metrics()
+	return float64(m.Ascent) / 64.0, float64(m.Descent) / 64.0
+}
+
 func ellipsize(text string, maxWidth float64, face font.Face) string {
 	if text == "" || measureString(face, text) <= maxWidth {
 		return text

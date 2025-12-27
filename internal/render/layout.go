@@ -131,27 +131,34 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 
 	textLines := wrapText(data.Text, textAvailableWidth, fonts.Text)
 
-	nameHeight := lineHeight(fonts.Name)
-	handleHeight := lineHeight(fonts.Handle)
-	textHeight := lineHeight(fonts.Text)
-	metaHeight := lineHeight(fonts.Meta)
-	actionHeight := lineHeight(fonts.Action)
-	ctaFontHeight := lineHeight(fonts.CTA)
+	nameAscent, nameDescent := fontAscentDescent(fonts.Name)
+	handleAscent, handleDescent := fontAscentDescent(fonts.Handle)
+	textAscent, textDescent := fontAscentDescent(fonts.Text)
+	metaAscent, metaDescent := fontAscentDescent(fonts.Meta)
+	actionAscent, actionDescent := fontAscentDescent(fonts.Action)
+	ctaAscent, ctaDescent := fontAscentDescent(fonts.CTA)
+
+	nameHeight := nameAscent + nameDescent
+	handleHeight := handleAscent + handleDescent
+	textHeight := textAscent + textDescent
+	metaHeight := metaAscent + metaDescent
+	actionHeight := actionAscent + actionDescent
+	ctaFontHeight := ctaAscent + ctaDescent
 
 	textLineHeight := textHeight * 1.45
 
 	headerTextHeight := nameHeight + 4 + handleHeight
 	headerHeight := math.Max(avatarSize, headerTextHeight)
 
-	nameY := padding + nameHeight
-	handleY := nameY + 4 + handleHeight
-	textY := padding + headerHeight + 16 + textHeight
+	nameY := padding + nameAscent
+	handleY := nameY + nameDescent + 4 + handleAscent
+	textY := padding + headerHeight + 16 + textAscent
 	verifiedX := 0.0
 	verifiedY := 0.0
 	if data.Verified {
 		nameWidth := measureString(fonts.Name, nameLine)
 		verifiedX = textStartX + nameWidth + verifiedGap
-		verifiedY = nameY - nameHeight + (nameHeight-verifiedSize)/2
+		verifiedY = nameY - nameAscent + (nameHeight-verifiedSize)/2
 	}
 
 	textBlockHeight := textHeight
@@ -203,9 +210,9 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 
 	if dateLine != "" {
 		dateRowHeight := math.Max(metaHeight, infoSize)
-		dateY = cursorY + 16 + (dateRowHeight-metaHeight)/2 + metaHeight
+		dateY = cursorY + 16 + (dateRowHeight-metaHeight)/2 + metaAscent
 		infoX = width - padding - infoSize
-		infoY = dateY - metaHeight/2 - infoSize/2
+		infoY = cursorY + 16 + (dateRowHeight-infoSize)/2
 		dividerY = dateY + 12
 		cursorY = dividerY
 	} else {
@@ -215,7 +222,7 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 
 	actionsTop := cursorY + 16
 	actionRowHeight := math.Max(actionHeight, actionIconSize)
-	actionsBaseline := actionsTop + (actionRowHeight-actionHeight)/2 + actionHeight
+	actionsBaseline := actionsTop + (actionRowHeight-actionHeight)/2 + actionAscent
 	cursorY = actionsTop + actionRowHeight
 
 	actions := buildActions(data)
@@ -224,7 +231,7 @@ func computeLayout(data TweetData, opts RenderOptions, fonts FontSet) Layout {
 		labelWidth := measureString(fonts.Action, actions[i].Label)
 		actions[i].IconSize = actionIconSize
 		actions[i].IconX = actionX
-		actions[i].IconY = actionsBaseline - actionHeight/2 - actionIconSize/2
+		actions[i].IconY = actionsTop + (actionRowHeight-actionIconSize)/2
 		actions[i].LabelX = actionX + actionIconSize + 8
 		actions[i].LabelY = actionsBaseline
 		actionX += actionIconSize + 8 + labelWidth + 32

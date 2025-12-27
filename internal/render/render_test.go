@@ -1,6 +1,7 @@
 package render
 
 import (
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -149,7 +150,48 @@ func TestTightWidthMin(t *testing.T) {
 	if err != nil {
 		t.Fatalf("RenderImage: %v", err)
 	}
-	if img.Bounds().Dx() < 400 {
-		t.Fatalf("expected minimum width of 400, got %d", img.Bounds().Dx())
+	if img.Bounds().Dx() < 600 {
+		t.Fatalf("expected minimum width of 600, got %d", img.Bounds().Dx())
 	}
+}
+
+func TestTightWidthMinHTML(t *testing.T) {
+	opts := DefaultOptions()
+	opts.WidthMode = "tight"
+	opts.Width = 300
+	data := TweetData{
+		Text:   "short",
+		Name:   "Example",
+		Handle: "example",
+	}
+	html, err := RenderHTML(data, opts)
+	if err != nil {
+		t.Fatalf("RenderHTML: %v", err)
+	}
+	width, ok := extractHTMLWidth(html)
+	if !ok {
+		t.Fatalf("failed to extract width from html")
+	}
+	if width < 600 {
+		t.Fatalf("expected minimum width of 600, got %d", width)
+	}
+}
+
+func extractHTMLWidth(html string) (int, bool) {
+	key := "width: "
+	idx := strings.Index(html, key)
+	if idx == -1 {
+		return 0, false
+	}
+	start := idx + len(key)
+	end := strings.Index(html[start:], "px")
+	if end == -1 {
+		return 0, false
+	}
+	value := strings.TrimSpace(html[start : start+end])
+	width, err := strconv.Atoi(value)
+	if err != nil {
+		return 0, false
+	}
+	return width, true
 }

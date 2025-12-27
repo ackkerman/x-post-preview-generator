@@ -2,7 +2,13 @@
 
 GoでX(旧Twitter)の埋め込みプレビュー風カードを画像/HTML/SVGとして生成するCLIです。
 
+*normal:*
+
 ![](./samples/jack.svg)
+
+*simple:*
+
+![](./samples/simple-jack.svg)
 
 ## 使い方
 
@@ -82,7 +88,7 @@ CTA非表示:
 - `-output`: 出力ファイルパス (拡張子から形式を推定)
 - `-format`: 出力形式 `png|jpg|jpeg|gif|svg|html`
 - `-width`: 出力幅(px)
-- `-width-mode`: `fixed` または `tight` (tightは入力テキストに合わせて横幅を縮める/最小400px)
+- `-width-mode`: `fixed` または `tight` (tightは入力テキストに合わせて横幅を縮める/最小600px)
 - `-padding`: 余白(px)
 - `-theme`: `light` または `dark`
 - `-font`: 本文フォントパス(.ttf/.otf)

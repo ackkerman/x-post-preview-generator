@@ -231,6 +231,14 @@ const htmlTemplate = `<!doctype html>
 // RenderHTML returns the tweet preview as HTML.
 func RenderHTML(data TweetData, opts RenderOptions) (string, error) {
 	opts = normalizeOptions(opts)
+	fonts, err := loadFontSet(opts)
+	if err != nil {
+		return "", err
+	}
+	defer fonts.Close()
+
+	layout := computeLayout(data, opts, fonts)
+
 	avatar, err := avatarDataURI(data.Icon)
 	if err != nil {
 		return "", err
@@ -241,7 +249,7 @@ func RenderHTML(data TweetData, opts RenderOptions) (string, error) {
 	}
 
 	view := htmlView{
-		Width:         opts.Width,
+		Width:         layout.Width,
 		Padding:       opts.Padding,
 		AvatarSize:    opts.AvatarSize,
 		Gap:           opts.Gap,
