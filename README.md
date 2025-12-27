@@ -72,6 +72,16 @@ CTA非表示:
 - `make sample`: サンプル生成 (jack / just setting up my twttr)
 - `make`: fmt/lint/test/build
 
+## Web UI
+
+`ui` 配下にNext.jsベースの操作UIを用意しています。
+
+```bash
+cd ui
+npm install
+npm run dev
+```
+
 ## オプション
 
 - `-text` (必須): ツイート本文

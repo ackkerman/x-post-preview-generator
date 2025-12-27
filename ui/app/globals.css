@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: #f5f1ea;
+  --surface: #ffffff;
+  --border: rgba(15, 23, 42, 0.15);
+  --ink: #1a1a1a;
+  --muted: #5b554b;
+  --accent: #1c6e6e;
+  --accent-2: #f97316;
+  --ring: #1c6e6e;
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--canvas);
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(28, 110, 110, 0.15), transparent 55%),
+    radial-gradient(circle at 85% 20%, rgba(249, 115, 22, 0.2), transparent 50%),
+    linear-gradient(120deg, rgba(17, 24, 39, 0.04), transparent 60%);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(28, 110, 110, 0.3);
+}
+
+@layer components {
+  .panel {
+    @apply rounded-3xl border border-border bg-white/85 shadow-soft backdrop-blur;
+  }
+
+  .panel-muted {
+    @apply rounded-2xl border border-border bg-white/70 backdrop-blur;
+  }
+
+  .grid-overlay {
+    background-image: radial-gradient(rgba(26, 26, 26, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
